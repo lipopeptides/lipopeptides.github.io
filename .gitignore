@@ -1,0 +1,9 @@
+node_modules
+stats.json
+.DS_Store
+
+# JetBrains
+.idea
+
+# VS Code
+.vscode
