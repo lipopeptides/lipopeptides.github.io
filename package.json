@@ -20,9 +20,18 @@
         "deploy": ""
     },
     "dependencies": {
+        "@emotion/react": "^11.11.4",
+        "@emotion/styled": "^11.11.5",
+        "@fontsource/roboto": "^5.0.13",
+        "@mui/icons-material": "^5.16.1",
+        "@mui/material": "^5.16.1",
+        "install": "^0.13.0",
         "react": "^18.3.1",
         "react-admin": "^5.0.4",
-        "react-dom": "^18.3.1"
+        "react-dom": "^18.3.1",
+        "react-query": "^3.39.3",
+        "sql-bricks": "^2.0.5",
+        "sql.js-httpvfs": "^0.8.11"
     },
     "devDependencies": {
         "@babel/plugin-proposal-class-properties": "^7.18.6",
