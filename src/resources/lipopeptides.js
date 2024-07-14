@@ -55,33 +55,32 @@ const LipopeptideList = (props) => {
                             <TextField 
                                 source='id'
                                 label='ID'
-                                sortable={true}
+                                sortable={false}
                             />
                             <TextField 
                                 source='compound_name'
                                 label='Name'
-                                sortable={true}
+                                sortable={false}
                             />
                             {/* <TextField 
                                 source='canonical_smiles'
                                 label='Canonical SMILES'
                                 sortable={false}
-                                style={{ maxWidth: '200px' }}
                             /> */}
                             <TextField 
                                 source='producing_organism'
                                 label='Producing organism'
-                                sortable={true}
+                                sortable={false}
                             />
                             <TextField 
                                 source='mibig_cluster'
                                 label='Associated MIBiG cluster'
-                                sortable={true}
+                                sortable={false}
                             />
                             <TextField 
                                 source='lipid_tail_smiles'
                                 label='Lipid tail SMILES'
-                                sortable={true}
+                                sortable={false}
                             />
                         </CustomizableDatagrid>
                     </List>
