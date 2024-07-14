@@ -1,36 +1,62 @@
 import queryBuilder from './SqlQueryBuilder';
 
-const getData = (resource, params) => {
+const getTotalCountCompounds = (resource, params) => {
     return queryBuilder
-        .select('compound_id, compound_name, canonical_smiles')
+        .select('count(*)')
         .from(resource)
         .toParams({ placeholder: '?%d' })
+};
+
+const getData = (resource, params, paginated) => {
+    const select = 'compound_id, compound_name, canonical_smiles, producing_organism, mibig_cluster, lipid_tail_smiles';
+
+    if (paginated) {
+        return queryBuilder
+            .select(select)
+            .from(resource)
+            .limit(params.pagination.perPage)
+            .offset((params.pagination.page - 1) * params.pagination.perPage)
+            .toParams({ placeholder: '?%d' })
+    } else {
+        return queryBuilder
+            .select(select)
+            .from(resource)
+            .toParams({ placeholder: '?%d' })
+    };
+};
+
+const formatResults = (results) => {
+    const { columns: columnNames, values: columnValues } = results;
+    return columnValues.map((row) => 
+        row.reduce((acc, value, index) => {
+            const key = columnNames[index] === 'compound_id' ? 'id' : columnNames[index];
+            const formattedValue = typeof value === 'string' ? value.replace(/\|/g, ' or ') : value;
+            acc[key] = formattedValue;
+            return acc;
+        }, {})
+    );
 };
   
 export default (dbClient) => ({
     getList: (resource, params) => {
-        const { text: query, values: queryParams } = getData(resource, params);    
+        const { text: dataQuery, values: dataQueryParams } = getData(resource, params, true);    
+        const { text: countQuery, values: countQueryParams } = getTotalCountCompounds(resource, params);
 
-        return dbClient.db
-            .exec(query, queryParams)
-            .then((queryResult) => {
-                return {
-                    data: queryResult.map((row) => {
-                        const { compound_id, compound_name, canonical_smiles } = row;
-                        return {
-                            id: compound_id,
-                            compound_id,
-                            compound_name,
-                            canonical_smiles
-                        }
-                    }),
-                    total: queryResult.length
-                }
-            })
-            .catch((error) => {
-                console.log('SQL error: ', error)
-                return error
-            });
+        // Execute both queries in parallel.
+        return Promise.all([
+            dbClient.db.exec(dataQuery, dataQueryParams),
+            dbClient.db.exec(countQuery, countQueryParams)
+        ])
+        .then(([dataQueryResult, countQueryResult]) => {
+            // Process the results of both queries.
+            const data = formatResults(dataQueryResult[0]);
+            const total = parseInt(countQueryResult[0].values[0]);
+            return { data, total };
+        })
+        .catch((error) => {
+            console.log('SQL error: ', error);
+            return error;
+        });
     },
   
     getOne: (resource, params) => {
@@ -74,7 +100,18 @@ export default (dbClient) => ({
     },
   
     getAll: (resource, params) => {
-        console.log("getAll", resource, params)
-        return Promise.reject('getAll is not yet implemented')
+        const { text: dataQuery, values: dataQueryParams } = getData(resource, params, false);    
+        
+        return Promise.all([
+            dbClient.db.exec(dataQuery, dataQueryParams)
+        ])
+        .then(([dataQueryResult]) => {
+            const data = formatResults(dataQueryResult[0]);
+            return { data };
+        })
+        .catch((error) => {
+            console.log('SQL error: ', error);
+            return error;
+        });
     },
 });

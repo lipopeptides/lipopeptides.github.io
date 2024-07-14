@@ -17,7 +17,7 @@
         "start": "webpack serve --config config/webpack.dev.js",
         "build": "NODE_ENV=production webpack --config config/webpack.prod.js",
         "predeploy": "npm run build",
-        "deploy": ""
+        "deploy": "gh-pages -d dist"
     },
     "dependencies": {
         "@emotion/react": "^11.11.4",
@@ -25,11 +25,12 @@
         "@fontsource/roboto": "^5.0.13",
         "@mui/icons-material": "^5.16.1",
         "@mui/material": "^5.16.1",
+        "chart.js": "^4.4.3",
         "install": "^0.13.0",
         "react": "^18.3.1",
         "react-admin": "^5.0.4",
+        "react-chartjs-2": "^5.2.0",
         "react-dom": "^18.3.1",
-        "react-query": "^3.39.3",
         "sql-bricks": "^2.0.5",
         "sql.js-httpvfs": "^0.8.11"
     },
@@ -43,6 +44,7 @@
         "clean-webpack-plugin": "^4.0.0",
         "copy-webpack-plugin": "^12.0.2",
         "dotenv-webpack": "^8.1.0",
+        "gh-pages": "^6.1.1",
         "html-webpack-plugin": "^5.6.0",
         "mini-css-extract-plugin": "^2.9.0",
         "react-refresh": "^0.14.2",

@@ -12,5 +12,5 @@ start: ## start webpack dev server
 run: ## alias for start
 	@${MAKE} start
 
-deploy: ## deploy ra application to github page
+deploy: ## deploy react-admin application to github page
 	npm run deploy

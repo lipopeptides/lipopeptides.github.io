@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Admin, Resource, Loading } from 'react-admin';
+import { Admin, Resource, Layout, Loading } from 'react-admin';
 import { createRoot } from 'react-dom/client';
 import { Box, CssBaseline } from '@mui/material';
 import { createDbWorker } from 'sql.js-httpvfs';
 import { getDbDescription } from './database/DbDiscover';
 import dataProviderFactory from './database/DataProvider';
 import lipopeptides from './resources/lipopeptides';
+import CustomAppBar from './components/CustomAppBar';
 
 const workerUrl = new URL('sql.js-httpvfs/dist/sqlite.worker.js', import.meta.url);
 const wasmUrl = new URL('sql.js-httpvfs/dist/sql-wasm.wasm', import.meta.url);
@@ -16,6 +17,10 @@ const config = {
         requestChunkSize: 4096,
         url: process.env.DB_URL
     }
+};
+
+const CustomLayout = (props) => {
+    return <Layout {...props} appBar={CustomAppBar} />
 };
 
 const App = () => {
@@ -40,8 +45,9 @@ const App = () => {
             <CssBaseline />
             <Box>
                 {dataProvider === null ? <Loading /> : (
-                    <Admin
+                    <Admin 
                         dataProvider={dataProvider}
+                        // layout={CustomLayout}
                     >
                         <Resource {...lipopeptides}/>
                     </Admin>
