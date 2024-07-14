@@ -7,3 +7,5 @@ stats.json
 
 # VS Code
 .vscode
+
+/dist
